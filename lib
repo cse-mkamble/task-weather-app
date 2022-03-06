@@ -1,0 +1,12 @@
+npm install dotenv --save
+npm install express --save
+npm install mongoose --save
+
+npm install concurrently --save
+npm install --save-dev nodemon
+
+npm install bcrypt-nodejs --save
+npm install body-parser --save
+npm install jsonwebtoken --save
+npm install mongodb --save
+npm install validator --save
