@@ -1,3 +1,3 @@
 module.exports = {
-    db: 'mongodb://localhost/weather'
+    db: 'mongodb+srv://root:root@cluster0.3cbla.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 };

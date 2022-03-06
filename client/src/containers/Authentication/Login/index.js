@@ -1,10 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Alert, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
 
-import { isUserAuthenticated } from "../../../redux/Actions/authAction";
+import { isUserAuthenticated, login } from "../../../redux/Actions/authAction";
+import { GLOBALTYPES } from "../../../redux/Actions/globalTypes";
 
-export default class Login extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
         const storedMessage = localStorage.getItem('successMessage');
@@ -36,7 +38,7 @@ export default class Login extends React.Component {
         const username = encodeURIComponent(this.state.user.username);
         const password = encodeURIComponent(this.state.user.password);
         const formData = `username=${username}&password=${password}`;
-        console.log(formData)
+        this.props.onLogin(formData);
     }
 
     render() {
@@ -55,11 +57,11 @@ export default class Login extends React.Component {
         var passwordError = "";
 
         if (this.state.successMessage) {
-            message = <Alert bsStyle="success">{this.state.successMessage}</Alert>;
+            message = <Alert color="success">{this.state.successMessage}</Alert>;
         }
 
         if (this.state.errors.login) {
-            message = <Alert bsStyle="danger">{this.state.errors.login}</Alert>;
+            message = <Alert color="danger">{this.state.errors.login}</Alert>;
         }
 
         if (this.state.errors.username) {
@@ -70,9 +72,12 @@ export default class Login extends React.Component {
             passwordError = this.state.errors.password;
         }
 
+        if (this.props.auth.successLogin) {
+            window.location.reload();
+        }
+
         return (<form onSubmit={this.handleSubmit} className="form login-form">
             <h3>Login</h3>
-            {message}
             <div className="reg-wrapper">
                 <div className='control-labels'>
                     <p>Username</p>
@@ -95,3 +100,17 @@ export default class Login extends React.Component {
         </form>);
     }
 }
+
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onLogin: (formData) => dispatch(login(formData))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login);

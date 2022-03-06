@@ -1,10 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { FormGroup, Form, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
 
-import { isUserAuthenticated } from "../../../redux/Actions/authAction";
+import { isUserAuthenticated, register } from "../../../redux/Actions/authAction";
+import { GLOBALTYPES } from "../../../redux/Actions/globalTypes";
 
-export default class Registration extends React.Component {
+class Registration extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -41,7 +43,7 @@ export default class Registration extends React.Component {
         const passwordTwo = encodeURIComponent(this.state.user.passwordTwo);
         const formData = `name=${name}&username=${username}&email=${email}&password=${password}&passwordTwo=${passwordTwo}`;
 
-        console.log(formData, "formData");
+        this.props.onRegistration(formData);
     }
 
 
@@ -54,6 +56,12 @@ export default class Registration extends React.Component {
         if (this.state.redirectToLogin) {
             return (<Redirect push to='/login' />)
         }
+
+        if (this.props.auth.successRegister) {
+            this.props.onRegistrationCls();
+            return (<Redirect push to='/login' />)
+        }
+
         var nameError = "";
         var usernameError = "";
         var emailError = "";
@@ -124,3 +132,18 @@ export default class Registration extends React.Component {
             </form>);
     }
 }
+
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    onRegistration: (formData) => dispatch(register(formData)),
+    onRegistrationCls: () => dispatch({ type: GLOBALTYPES.AUTH, payload: { successRegister: '' } })
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Registration);
