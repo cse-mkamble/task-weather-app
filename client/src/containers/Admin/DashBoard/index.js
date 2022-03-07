@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import HeadBar from "../../../components/HeadBar";
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText, Grid, TextField, Container, CssBaseline, MenuItem } from '@mui/material';
+import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Grid, TextField, Container, CssBaseline, MenuItem } from '@mui/material';
 
-import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
-import Typography from '@mui/material/Typography';
-import { blue } from '@mui/material/colors';
+import AllWeather from "./AllWeather";
 
 import CSCData from "../../../countries_states_cities.json";
+import HeadBar from "../../../components/HeadBar";
+import { addWeatherReq } from "../../../redux/actions/weatherAction";
 
 export default function DashBoard() {
     const [open, setOpen] = React.useState(false);
@@ -86,9 +79,30 @@ export default function DashBoard() {
 
     const valTemp = data.temp;
     const valScale = data.scale;
-    const celsius = valScale === 'f' ? (valTemp - 32) * 5 / 9 : valTemp;
-    const fahrenheit = valScale === 'c' ? (valTemp * 9 / 5) + 32 : valTemp;
+    const celsius = valScale === 'f' ? ((valTemp - 32) * 5 / 9).toFixed(2) : valTemp;
+    const fahrenheit = valScale === 'c' ? ((valTemp * 9 / 5) + 32).toFixed(2) : valTemp;
 
+    const handleWeatherSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            let responseData = await addWeatherReq({ country: data.country, region: data.region, city: data.city, celsius, fahrenheit });
+            if (responseData.error) {
+                setData({ ...data, error: responseData.error });
+            } else if (responseData.success) {
+                setData({
+                    country: "",
+                    region: "",
+                    city: "",
+                    scale: 'c',
+                    temp: 0
+                });
+                alert("Weather create successfully!");
+                handleClose();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (<div>
         <HeadBar />
@@ -196,10 +210,11 @@ export default function DashBoard() {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>cancel</Button>
-                <Button onClick={handleClose} autoFocus>
+                <Button onClick={handleWeatherSubmit} autoFocus>
                     submit
                 </Button>
             </DialogActions>
         </Dialog>
+        <AllWeather />
     </div>)
 }
