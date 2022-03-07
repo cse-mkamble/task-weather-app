@@ -30,9 +30,9 @@ db.on('error', (err) => {
 app.use("/api", require('./src/routes'));
 
 // Server Run Test
-app.get('/', (req, res) => {
-  res.send("server working fine!");
-})
+// app.get('/', (req, res) => {
+//   res.send("server working fine!");
+// })
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'))
