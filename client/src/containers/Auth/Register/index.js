@@ -30,6 +30,7 @@ export default function Register() {
 
     const handleSubmitRegister = async e => {
         e.preventDefault();
+        setData({ ...data });
         if (data.cf_password !== data.password) {
             return setData({
                 ...data,

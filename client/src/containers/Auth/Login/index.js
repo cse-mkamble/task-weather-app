@@ -1,14 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Box, Container, TextField, Button, Grid, Link, Typography } from '@mui/material';
 import { InputAdornment, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
 import AOS from 'aos';
+
+import { loginReq } from "../../../redux/actions/authAction";
+
 import 'aos/dist/aos.css';
 
 export default function Login() {
     AOS.init();
+    const history = useHistory();
 
     const [data, setData] = useState({
         email: "",
@@ -20,9 +24,21 @@ export default function Login() {
     const handleClickShowPassword = () => setShowPassword(!showPassword);
     const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
-    const handleSubmitLogin = e => {
+    const handleSubmitLogin = async e => {
         e.preventDefault();
-        console.log(data.email, data.password);
+        setData({ ...data });
+        try {
+            let responseData = await loginReq(data);
+            if (responseData.error) {
+                setData({ ...data, error: responseData.error, password: "", });
+            } else if (responseData.token) {
+                setData({ email: "", password: "", error: false });
+                localStorage.setItem("jwt", JSON.stringify(responseData));
+                history.push("/");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (<Box>
@@ -45,6 +61,7 @@ export default function Login() {
                         }}
                         value={data.email}
                     />
+                    {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error}</Typography>}
                     <TextField
                         size='small'
                         margin="normal"
@@ -73,17 +90,18 @@ export default function Login() {
                             )
                         }}
                     />
+                    {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error}</Typography>}
                     <Button
                         size='small'
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{ mt: 1, mb: 1 }}
+                        sx={{ mt: 2, mb: 1 }}
                         disabled={data.email && data.password ? false : true}
                     > Login </Button>
                 </Box>
                 <Grid container justifyContent="center" >
-                    <Grid item sx={{ mt: 3 }}>
+                    <Grid item sx={{ mt: 4 }}>
                         <Link href="/register" variant="body2">
                             {"Don't have an account? Create Account"}
                         </Link>

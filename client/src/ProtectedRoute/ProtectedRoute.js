@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
-import { isAuthenticate, isAdmin } from "./fetchApi";
+import { isAuthenticate, isAdmin } from "../redux/actions/authAction";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => (
   <Route

@@ -4,12 +4,8 @@ const authController = require("../controller/auth");
 const { loginCheck, isAuth, isAdmin, authMiddleware } = require("../middleware/auth");
 
 router.post("/isadmin", authController.isAdmin);
-// router.post("/signup", authController.postSignup);
 router.post('/register', authController.register)
-// router.post('/activation', authController.activateEmail)
-// router.post('/forgot', authController.forgotPassword)
-// router.post('/reset', authMiddleware, authController.resetPassword)
-// router.post("/signin", authController.postSignin);
+router.post("/login", authController.login);
 // router.post("/user", loginCheck, isAuth, isAdmin, authController.allUser);
 
 module.exports = router;
