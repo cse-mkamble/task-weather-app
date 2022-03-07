@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom';
 import { Box, Container, Button, Grid, AppBar, Link, Toolbar, Typography } from '@mui/material';
 
@@ -12,6 +13,7 @@ import { DashBoard } from "./containers/Admin";
 import { AdminProtectedRoute } from "./ProtectedRoute";
 
 import { isAuthenticate } from "./redux/actions/authAction";
+import { getAllWeatherReq } from "./redux/actions/weatherAction";
 import DataProvider from './redux/store';
 
 import AOS from 'aos';
@@ -44,22 +46,31 @@ function Main() {
 
 function Application() {
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticate()) {
+      dispatch(getAllWeatherReq());
+    }
+  }, [])
+
   return (<BrowserRouter>
     <Toolbar>
       <Typography component='h3' variant='h4' sx={{ m: 'auto' }}>Weather App</Typography>
     </Toolbar>
 
     {/* Public Routes */}
-    <Route exact path="/" component={Main} />
-    <Route exact path="/login" component={Login} />
-    <Route exact path="/register" component={Register} />
+    <Switch>
+      <Route exact path="/" component={Main} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
 
-    <AdminProtectedRoute
-      exact={true}
-      path="/admin/dashboard"
-      component={DashBoard}
-    />
-
+      <AdminProtectedRoute
+        exact={true}
+        path="/admin/dashboard"
+        component={DashBoard}
+      />
+    </Switch>
   </BrowserRouter>);
 }
 
