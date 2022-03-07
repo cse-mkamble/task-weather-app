@@ -1,0 +1,28 @@
+# <----- Server libraries ----->
+npm install express --save
+npm install dotenv --save
+npm install cookie-parser --save
+npm install cors --save
+
+npm install mongoose --save
+npm install bcryptjs --save
+npm install jsonwebtoken --save
+
+npm install concurrently --save
+npm install nodemon --save-dev
+
+# <----- Client libraries ----->
+npm install --save react react-dom react-scripts
+npm install --save react-router-dom@5.2.0
+npm install --save redux react-redux redux-thunk redux-devtools-extension
+
+# Install MUI, the world's most popular React UI framework.
+npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/material @mui/styled-engine-sc styled-components
+npm install @mui/icons-material
+
+npm install --save prop-types
+npm install --save @material-ui/core
+
+npm install --save axios
+npm install moment
