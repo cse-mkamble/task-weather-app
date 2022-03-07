@@ -20,7 +20,11 @@ const userSchema = new mongoose.Schema(
     userRole: {
       type: Number,
       required: true,
-    }
+    },
+    secretKey: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

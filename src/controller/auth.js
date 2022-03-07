@@ -4,7 +4,6 @@ const { JWT_SECRET } = require("../config/keys");
 const userModel = require("../models/users");
 
 class Auth {
-
   async isAdmin(req, res) {
     let { loggedInUserId } = req.body;
     try {
@@ -27,12 +26,15 @@ class Auth {
   /* User Registration/Signup controller  */
   async register(req, res) {
     try {
-      let { name, email, password, cPassword } = req.body;
+      let { name, username, email, password, cf_password, user_role } = req.body;
+      let cPassword = cf_password;
+      let userRole = user_role;
       let error = {};
-      if (!name || !email || !password || !cPassword) {
+      if (!name || !username || !email || !password || !cPassword) {
         error = {
           ...error,
           name: "Filed must not be empty",
+          username: "Filed must not be empty",
           email: "Filed must not be empty",
           password: "Filed must not be empty",
           cPassword: "Filed must not be empty",
@@ -56,94 +58,32 @@ class Auth {
             };
             return res.json({ error });
           } else {
-            const newUser = {
-              name,
-              email,
-              password,
-              // ========= Here role 1 for admin signup role 0 for customer signup =========
-              userRole: 0, // Field Name change to userRole from role
-            }
-            const activation_token = createActivationToken(newUser)
-            const url = `${CLIENT_URL}/user/activation/${activation_token}`
-            const subjectMail = 'Confirm your email address'
-            const message = activationTokenMail(name, url, CONTACT_US)
-            sendMail({ to: email, subject: subjectMail, text: message })
-
-            res.json({ success: "Please activate your email to start." })
+            let newUser = new userModel({ name, username, email, password, userRole });
+            newUser.save().then((data) => {
+              const token = jwt.sign({ _id: data._id, role: data.userRole }, JWT_SECRET)
+              const encode = jwt.verify(token, JWT_SECRET)
+              return res.json({ token: token, user: encode, success: "Your Account have create successfully!" })
+            }).catch((error) => {
+              return res.json({ error: "Alread exit your email!" })
+            });
           }
-        } catch (err) {
-          console.log(err);
+        } catch (error) {
+          console.log(error);
         }
       }
-    } catch (err) {
-      return res.status(500).json({ msg: err.message })
-    }
-  }
-
-  async activateEmail(req, res) {
-    try {
-      const { activation_token } = req.body
-      const user = jwt.verify(activation_token, process.env.ACTIVATION_TOKEN_SECRET)
-      if (!user) return res.status(400).json({ msg: "This user not exists." })
-      const { name, email, password, userRole } = user
-      let newUser = new userModel({
-        name,
-        email,
-        password,
-        userRole,
-      });
-      newUser
-        .save()
-        .then((data) => {
-          const token = jwt.sign({ _id: data._id, role: data.userRole }, JWT_SECRET)
-          const encode = jwt.verify(token, JWT_SECRET)
-          return res.json({
-            token: token,
-            user: encode
-          })
-        })
-        .catch((err) => {
-          return res.json({ error: "Alread exit your email!" })
-        });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message })
+    } catch (error) {
+      return res.status(500).json({ msg: error.message })
     }
   }
 
   /* User Login/Signin controller  */
-  async postSignin(req, res) {
+  async login(req, res) {
     let { email, password } = req.body;
-    if (!email || !password) {
-      return res.json({
-        error: "Fields must not be empty",
-      });
-    }
+    if (!email || !password) return res.json({ error: "Fields must not be empty" });
     try {
-      const data = await userModel.findOne({ email: email });
-      if (!data) {
-        return res.json({
-          error: "Invalid email or password",
-        });
-      } else {
-        const login = await bcrypt.compare(password, data.password);
-        if (login) {
-          const token = jwt.sign(
-            { _id: data._id, role: data.userRole },
-            JWT_SECRET
-          );
-          const encode = jwt.verify(token, JWT_SECRET);
-          return res.json({
-            token: token,
-            user: encode,
-          });
-        } else {
-          return res.json({
-            error: "Invalid email or password",
-          });
-        }
-      }
-    } catch (err) {
-      console.log(err);
+      console.log(email, password);
+    } catch (error) {
+      console.log(error);
     }
   }
 

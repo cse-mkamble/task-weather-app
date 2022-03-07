@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Box, Container, TextField, Button, Grid, Link, FormControlLabel, Checkbox, Typography, FormControl, MenuItem, InputLabel, Select } from '@mui/material';
-
 import AOS from 'aos';
+
+import { registerReq } from "../../../redux/actions/authAction";
+
 import 'aos/dist/aos.css';
 
 export default function Register() {
     AOS.init();
+
+    const history = useHistory();
 
     const [data, setData] = useState({
         name: '',
@@ -14,13 +19,52 @@ export default function Register() {
         password: '',
         cf_password: '',
         user_role: 0,
+        success: ''
     });
 
     const [show_password, setShowPassword] = useState('password');
 
-    const handleSubmitRegister = e => {
+    const alert = (msg, type) => (
+        <div className={`text-sm text-${type}-500`}>{msg}</div>
+    );
+
+    const handleSubmitRegister = async e => {
         e.preventDefault();
-        console.log(data);
+        if (data.cf_password !== data.password) {
+            return setData({
+                ...data,
+                error: {
+                    cf_password: "Password doesn't match",
+                    password: "Password doesn't match",
+                },
+            });
+        }
+        try {
+            let responseData = await registerReq(data);
+            if (responseData.error) {
+                setData({
+                    ...data,
+                    loading: false,
+                    error: responseData.error,
+                    password: "",
+                    cf_password: "",
+                });
+            } else if (responseData.success) {
+                setData({
+                    success: responseData.success,
+                    name: "",
+                    username: "",
+                    email: "",
+                    password: "",
+                    cf_password: "",
+                    user_role: 0,
+                });
+                alert("Your Account have create successfully!");
+                history.push("/login");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (<Box>
@@ -46,6 +90,7 @@ export default function Register() {
                                 }}
                                 value={data.name}
                             />
+                            {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error.name}</Typography>}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -63,6 +108,7 @@ export default function Register() {
                                 }}
                                 value={data.username}
                             />
+                            {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error.username}</Typography>}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -80,6 +126,7 @@ export default function Register() {
                                 }}
                                 value={data.email}
                             />
+                            {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error.email}</Typography>}
                         </Grid>
                         <Grid item xs={12}>
                             <FormControl fullWidth>
@@ -115,6 +162,7 @@ export default function Register() {
                                 }}
                                 value={data.password}
                             />
+                            {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error.password}</Typography>}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -133,6 +181,7 @@ export default function Register() {
                                 }}
                                 value={data.cf_password}
                             />
+                            {!data.error ? "" : <Typography fontSize='small' color="error" >{data.error.cf_password}</Typography>}
                         </Grid>
                         <Grid item xs={12}>
                             <FormControlLabel

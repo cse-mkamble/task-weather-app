@@ -1,66 +1,36 @@
-import { GLOBALTYPES } from './globalTypes'
-import { postDataAPI } from '../../utils/fetchData'
-import valid from '../../utils/valid'
-import validator from 'validator';
+import { GLOBALTYPES } from './globalTypes';
+import { postDataAPI } from '../../utils/fetchData';
 
-export const login = (data) => async (dispatch) => {
+export const isAuthenticate = () => {
+    localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")) : false;
+}
+
+export const isAdmin = () => {
+    localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).user.role === 1 : false;
+}
+
+export const loginReq = async (data) => {
+    console.log(data);
     try {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } })
-        const res = await postDataAPI('login', data)
-        dispatch({
-            type: GLOBALTYPES.AUTH,
-            payload: {
-                token: res.data.access_token,
-                user: res.data.user
-            }
-        })
 
-        localStorage.setItem("firstLogin", true)
-        dispatch({
-            type: GLOBALTYPES.ALERT,
-            payload: {
-                success: res.data.msg
-            }
-        })
-
-    } catch (err) {
-        dispatch({
-            type: GLOBALTYPES.ALERT,
-            payload: {
-                error: err.response.data.msg
-            }
-        })
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export const register = (data) => async (dispatch) => {
+export const registerReq = async (data) => {
     try {
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { loading: true } });
-        const res = await postDataAPI('register', data);
-        dispatch({ type: GLOBALTYPES.AUTH, payload: { token: res.data.access_token, user: res.data.user } });
-        localStorage.setItem("firstLogin", true);
-        dispatch({ type: GLOBALTYPES.ALERT, payload: { success: res.data.msg } });
-    } catch (err) {
-        dispatch({
-            type: GLOBALTYPES.ALERT,
-            payload: {
-                error: err.response.data.msg
-            }
-        })
+        let res = await postDataAPI('auth/register', data);
+        return res.data;
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export const logout = () => async (dispatch) => {
+export const logoutReq = async () => {
     try {
-        localStorage.removeItem('firstLogin')
-        await postDataAPI('logout')
-        window.location.href = "/"
-    } catch (err) {
-        dispatch({
-            type: GLOBALTYPES.ALERT,
-            payload: {
-                error: err.response.data.msg
-            }
-        })
+
+    } catch (error) {
+        console.log(error);
     }
 }
