@@ -20,22 +20,7 @@ const userSchema = new mongoose.Schema(
     userRole: {
       type: Number,
       required: true,
-    },
-    phoneNumber: {
-      type: Number,
-    },
-    verified: {
-      type: String,
-      default: false,
-    },
-    secretKey: {
-      type: String,
-      default: null,
-    },
-    history: {
-      type: Array,
-      default: [],
-    },
+    }
   },
   { timestamps: true }
 );

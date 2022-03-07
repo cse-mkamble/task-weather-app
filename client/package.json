@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.4.4",
     "@mui/material": "^5.4.4",
     "@mui/styled-engine-sc": "^5.4.2",
+    "aos": "^2.3.4",
     "axios": "^0.26.0",
     "moment": "^2.29.1",
     "prop-types": "^15.8.1",
