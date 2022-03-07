@@ -6,11 +6,12 @@ import { Box, Container, Button, Grid, AppBar, Link, Toolbar, Typography } from 
 
 import HeadBar from "./components/HeadBar";
 
-import { Home } from "./containers/User";
-import { Login, Register } from "./containers/Auth";
-import { DashBoard } from "./containers/Admin";
+import Home from "./containers/User/Home";
+import Login from "./containers/Auth/Login";
+import Register from "./containers/Auth/Register";
+import DashBoard from "./containers/Admin/DashBoard";
 
-import { AdminProtectedRoute } from "./ProtectedRoute";
+import AdminProtectedRoute from "./ProtectedRoute/AdminProtectedRoute";
 
 import { isAuthenticate } from "./redux/actions/authAction";
 import { getAllWeatherReq } from "./redux/actions/weatherAction";
