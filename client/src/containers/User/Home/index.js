@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import AOS from 'aos';
-import { Box, Container, Button, Grid, Typography } from '@mui/material';
+import { Box, Container, Button, Grid, Typography, Toolbar } from '@mui/material';
 
 import HeadBar from "../../../components/HeadBar";
 import AllWeather from "../../Admin/DashBoard/AllWeather";
@@ -18,6 +18,9 @@ export default function Home() {
         <hr />
         <AllWeather />
     </Box>) : (<Box>
+        <Toolbar>
+            <Typography component='h3' variant='h4' sx={{ m: 'auto' }}>Weather App</Typography>
+        </Toolbar>
         <Container maxWidth="sm">
             <Box data-aos="zoom-in">
                 <Box sx={{ mt: 5 }}>

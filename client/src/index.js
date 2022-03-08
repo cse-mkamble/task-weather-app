@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { Toolbar, Typography } from '@mui/material';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Home from "./containers/User/Home";
 import Login from "./containers/Auth/Login";
@@ -23,24 +22,22 @@ function Application() {
     if (isAuthenticate()) {
       dispatch(getAllWeatherReq());
     }
-  }, [])
+  }, [isAuthenticate])
 
-  return (<BrowserRouter>
-    <Toolbar>
-      <Typography component='h3' variant='h4' sx={{ m: 'auto' }}>Weather App</Typography>
-    </Toolbar>
+  return (<Router>
+    <Switch>
+      {/* Public Routes */}
+      <Route exact path="/" component={Home} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
 
-    {/* Public Routes */}
-    <Route exact path="/" component={Home} />
-    <Route exact path="/login" component={Login} />
-    <Route exact path="/register" component={Register} />
-
-    <AdminProtectedRoute
-      exact={true}
-      path="/admin/dashboard"
-      component={DashBoard}
-    />
-  </BrowserRouter>);
+      <AdminProtectedRoute
+        exact={true}
+        path="/admin/dashboard"
+        component={DashBoard}
+      />
+    </Switch>
+  </Router>);
 }
 
 ReactDOM.render(

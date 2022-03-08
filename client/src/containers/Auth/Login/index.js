@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Container, TextField, Button, Grid, Link, Typography } from '@mui/material';
+import { Box, Container, TextField, Button, Grid, Link, Toolbar, Typography } from '@mui/material';
 import { InputAdornment, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -42,6 +42,9 @@ export default function Login() {
     };
 
     return (<Box>
+        <Toolbar>
+            <Typography component='h3' variant='h4' sx={{ m: 'auto' }}>Weather App</Typography>
+        </Toolbar>
         <Container maxWidth="xs">
             <Box data-aos="zoom-out" sx={{ my: 2, p: 2, boxShadow: 2, borderRadius: 1, background: '#fefcfe' }}>
                 <Typography component='h3' variant='h6' textAlign='center'>Login</Typography>

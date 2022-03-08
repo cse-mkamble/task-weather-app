@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Box, Container, TextField, Button, Grid, Link, FormControlLabel, Checkbox, Typography, FormControl, MenuItem, InputLabel, Select } from '@mui/material';
+import { Box, Container, TextField, Button, Grid, Link, Toolbar, FormControlLabel, Checkbox, Typography, FormControl, MenuItem, InputLabel, Select } from '@mui/material';
 import AOS from 'aos';
 
 import { registerReq } from "../../../redux/actions/authAction";
@@ -69,6 +69,9 @@ export default function Register() {
     };
 
     return (<Box>
+        <Toolbar>
+            <Typography component='h3' variant='h4' sx={{ m: 'auto' }}>Weather App</Typography>
+        </Toolbar>
         <Container maxWidth="xs">
             <Box data-aos="fade-right" sx={{ my: 2, p: 2, boxShadow: 2, borderRadius: 1, background: '#fefcfe' }}>
                 <Typography component='h3' variant='h6' textAlign='center'>Create Account</Typography>
