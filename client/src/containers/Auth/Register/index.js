@@ -201,9 +201,9 @@ export default function Register() {
                     </Button>
                     <Grid container justifyContent="center">
                         <Grid item>
-                            <Link href="/login" variant="body2">
-                                Already have an account? Login Now
-                            </Link>
+                            <Button onClick={() => history.push("/login")}>
+                                {"Already have an account? Login Now"}
+                            </Button>
                         </Grid>
                     </Grid>
                 </Box>

@@ -102,9 +102,9 @@ export default function Login() {
                 </Box>
                 <Grid container justifyContent="center" >
                     <Grid item sx={{ mt: 4 }}>
-                        <Link href="/register" variant="body2">
+                        <Button onClick={() => history.push("/register")}>
                             {"Don't have an account? Create Account"}
-                        </Link>
+                        </Button>
                     </Grid>
                 </Grid>
             </Box>
